@@ -24,7 +24,7 @@ This project serves as a "code notebook" to document my progress in mastering Re
 
 1.  Clone the repository:
     ```bash
-    git clone [https://github.com/YOUR_USERNAME/learning-react-v9.git](https://github.com/YOUR_USERNAME/learning-react-v9.git)
+    git clone https://github.com/sel-hasn/learning-react-v9
     ```
 2.  Install dependencies:
     ```bash
