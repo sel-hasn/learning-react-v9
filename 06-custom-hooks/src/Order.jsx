@@ -1,60 +1,47 @@
+import { useState, useEffect } from "react";
 import Pizza from "./Pizza";
-import { useEffect, useState } from "react";
-import Cart from "./Cart";
 
+// feel free to change en-US / USD to your locale
 const intl = new Intl.NumberFormat("en-US", {
   style: "currency",
   currency: "USD",
 });
 
 export default function Order() {
-  // const pizzaType = 'pepperoni';
-  // const pizzaSize = 'M';
-
   const [pizzaType, setPizzaType] = useState("pepperoni");
   const [pizzaSize, setPizzaSize] = useState("M");
   const [pizzaTypes, setPizzaTypes] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [cart, setCart] = useState([]);
-
-  // console.log('pizzaType:', pizzaType);
-  // console.log('pizzaSize:', pizzaSize);
 
   let price, selectedPizza;
-
   if (!loading) {
     selectedPizza = pizzaTypes.find((pizza) => pizzaType === pizza.id);
-    price = intl.format(selectedPizza.sizes[pizzaSize]);
-  }
-
-  async function fetchPizzaTypes() {
-    // await new Promise((resolve) => setTimeout(resolve, 3000)); // remove this later, just to show you the loading state
-
-    const pizzasRes = await fetch("/api/pizzas");
-    const pizzasJson = await pizzasRes.json();
-    setPizzaTypes(pizzasJson);
-    setLoading(false);
+    price = intl.format(
+      selectedPizza.sizes ? selectedPizza.sizes[pizzaSize] : "",
+    );
   }
 
   useEffect(() => {
     fetchPizzaTypes();
   }, []);
 
+  async function fetchPizzaTypes() {
+    const pizzasRes = await fetch("/api/pizzas");
+    const pizzasJson = await pizzasRes.json();
+    setPizzaTypes(pizzasJson);
+    setLoading(false);
+  }
+
   return (
     <div className="order">
-      <h2>Creat Order</h2>
-      <form
-        onSubmit={(event) => {
-          event.preventDefault();
-          setCart([...cart, { pizza: selectedPizza, size: pizzaSize }, price]);
-        }}
-      >
+      <h2>Create Order</h2>
+      <form>
         <div>
           <div>
             <label htmlFor="pizza-type">Pizza Type</label>
             <select
+              onChange={(e) => setPizzaType(e.target.value)}
               name="pizza-type"
-              onChange={(event) => setPizzaType(event.target.value)}
               value={pizzaType}
             >
               {pizzaTypes.map((pizza) => (
@@ -69,34 +56,34 @@ export default function Order() {
             <div>
               <span>
                 <input
+                  onChange={(e) => setPizzaSize(e.target.value)}
                   checked={pizzaSize === "S"}
                   type="radio"
                   name="pizza-size"
                   value="S"
                   id="pizza-s"
-                  onChange={(event) => setPizzaSize(event.target.value)}
                 />
                 <label htmlFor="pizza-s">Small</label>
               </span>
               <span>
                 <input
+                  onChange={(e) => setPizzaSize(e.target.value)}
                   checked={pizzaSize === "M"}
                   type="radio"
                   name="pizza-size"
                   value="M"
                   id="pizza-m"
-                  onChange={(event) => setPizzaSize(event.target.value)}
                 />
                 <label htmlFor="pizza-m">Medium</label>
               </span>
               <span>
                 <input
+                  onChange={(e) => setPizzaSize(e.target.value)}
                   checked={pizzaSize === "L"}
                   type="radio"
                   name="pizza-size"
                   value="L"
                   id="pizza-l"
-                  onChange={(event) => setPizzaSize(event.target.value)}
                 />
                 <label htmlFor="pizza-l">Large</label>
               </span>
@@ -105,7 +92,7 @@ export default function Order() {
           <button type="submit">Add to Cart</button>
         </div>
         {loading ? (
-          <h1>loding pizza kanden</h1>
+          <h3>LOADING …</h3>
         ) : (
           <div className="order-pizza">
             <Pizza
@@ -117,7 +104,6 @@ export default function Order() {
           </div>
         )}
       </form>
-      {loading ? <h2>LOADING ...</h2> : <Cart cart={cart} />}
     </div>
   );
 }

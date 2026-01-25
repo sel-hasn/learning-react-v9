@@ -1,15 +1,16 @@
-import { usePizzaOfTheDay } from './usePizzaOfTheDay';
+import { usePizzaOfTheDay } from "./usePizzaOfTheDay";
 
-const intl = new Intl.NumberFormat('en-US', {
-  style: 'currency',
-  currency: 'USD',
+// feel free to change en-US / USD to your locale
+const intl = new Intl.NumberFormat("en-US", {
+  style: "currency",
+  currency: "USD",
 });
 
 const PizzaOfTheDay = () => {
   const pizzaOfTheDay = usePizzaOfTheDay();
 
   if (!pizzaOfTheDay) {
-    return <div>Lodaing ...</div>;
+    return <div>Loading...</div>;
   }
 
   return (
@@ -20,7 +21,7 @@ const PizzaOfTheDay = () => {
           <h3>{pizzaOfTheDay.name}</h3>
           <p>{pizzaOfTheDay.description}</p>
           <p className="pizza-of-the-day-price">
-            From: {intl.format(pizzaOfTheDay.sizes.S)}
+            From: <span>{intl.format(pizzaOfTheDay.sizes.S)}</span>
           </p>
         </div>
         <img
